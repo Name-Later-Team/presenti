@@ -1,0 +1,22 @@
+version: '3'
+
+networks:
+  local_network:
+    external: true
+
+services:
+  presenti:
+    image: presenti
+    container_name: presenti
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    working_dir: /app
+    command: ['pm2-runtime', 'start', 'pm2.config.js']
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    env_file:
+      - .env.production
+    networks:
+      - local_network
