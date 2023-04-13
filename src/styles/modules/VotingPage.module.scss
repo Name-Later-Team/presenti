@@ -1,0 +1,29 @@
+.voting-page__card {
+    --app-logo-edge: 50px;
+    --padding: 2rem;
+
+    width: 100%;
+    max-width: 450px;
+    padding: calc(var(--padding) + var(--app-logo-edge) + 1rem) var(--padding) var(--padding) var(--padding);
+    max-height: 95%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.voting-page__card__app-logo-container {
+    position: absolute;
+    top: calc(var(--padding) / 2);
+    left: 50%;
+    transform: translateX(-50%);
+
+    height: var(--app-logo-edge);
+    max-height: var(--app-logo-edge);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    > .voting-page__card__app-logo-container__logo {
+        height: 100%;
+        -webkit-user-drag: none;
+    }
+}

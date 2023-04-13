@@ -20,7 +20,24 @@ export const RESPONSE_CODE = {
     INVALID_RESOURCE_PERMISSION: 4038,
 };
 
+// define all success notifications
+export const SUCCESS_NOTIFICATION = {};
+
+// define all error notifications
+export const ERROR_NOTIFICATION = {};
+
 export const PRESENTATION_TYPE = {
     OWNER: "owner",
     COLLABORATOR: "collaborator",
 };
+
+export const SLIDE_TYPE = {
+    MULTIPLE_CHOICE: "multiple_choice",
+    HEADING: "heading",
+    PARAGRAPH: "paragraph",
+} as const;
+
+export const PRESENTATION_PACE_STATES = {
+    IDLE: "idle",
+    PRESENTING: "presenting",
+} as const;
