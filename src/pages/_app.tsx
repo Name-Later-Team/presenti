@@ -7,8 +7,11 @@ export default function App({ Component, pageProps }: AppProps) {
     return (
         <>
             <Head>
-                <title>Presenti</title>
-                <meta name="description" content="Presenti - Lấy ý kiến thời gian thực" />
+                <title>Presenti - Hệ thống lấy ý kiến thời gian thực</title>
+                <meta
+                    name="description"
+                    content="Presenti - Hệ thống lấy ý kiến thời gian thực thuộc hệ thống ứng dụng Presento - Presenti"
+                />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/images/favicon.png" />
             </Head>
