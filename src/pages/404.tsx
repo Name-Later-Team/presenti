@@ -4,7 +4,7 @@ import { Button, Stack } from "react-bootstrap";
 import styles from "../styles/modules/404.module.scss";
 import Image from "next/image";
 
-export default function PageNotFound() {
+export default function PageNotFound(props: any) {
     const router = useRouter();
     return (
         <>
@@ -18,6 +18,7 @@ export default function PageNotFound() {
                     <Button className="mb-3" variant="primary" onClick={() => router.replace("/")}>
                         Về trang chủ
                     </Button>
+                    {props.env}
                     <div>
                         <Image
                             src="svgs/undraw_page_not_found.svg"
@@ -30,4 +31,12 @@ export default function PageNotFound() {
             </div>
         </>
     );
+}
+
+export function getStaticProps() {
+    return {
+        props: {
+            env: process.env.API_GATEWAY_URL,
+        },
+    };
 }
