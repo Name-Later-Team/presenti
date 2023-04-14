@@ -1,5 +1,4 @@
 import { CustomPagination } from "components/custom-pagination";
-import MultipleChoiceForm from "components/multiple-choice-form";
 import Head from "next/head";
 import { useState } from "react";
 import { Alert, Button, Card, Form, Modal, ProgressBar, Spinner, Stack, Table } from "react-bootstrap";
@@ -168,7 +167,7 @@ export default function UIComponents() {
 
                     <hr />
 
-                    <MultipleChoiceForm />
+                    {/* <MultipleChoiceForm /> */}
                 </Stack>
             </main>
             <Modal show={isModalOpen} centered onHide={() => setIsModalOpen(false)}>
