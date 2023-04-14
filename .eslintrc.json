@@ -3,10 +3,21 @@
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended"
   ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/no-unescaped-entities": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/ban-types": ["error",
+    {
+        "types": {
+            "Function": false
+        },
+        "extendDefaults": true
+    }
+    ]
+  },
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint"

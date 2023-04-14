@@ -12,6 +12,7 @@ import AwaitSlide from "components/voting-slides/await-slide";
 import ThankYouSlide from "components/voting-slides/thank-you-slide";
 import { PresentationPaceStateType, SlideType } from "shared/types";
 import Link from "next/link";
+import Image from "next/image";
 
 export enum PageMode {
     start,
@@ -83,14 +84,14 @@ export default function VotingPage() {
         : router.query.presentationIdentifier;
 
     // states
-    const [pageMode, setPageMode] = useState<PageMode>(PageMode.end);
-    const [presentation, setPresentation] = useState<IVotingPresentDetail>({} as IVotingPresentDetail);
-    const [currentSlide, setCurrentSlide] = useState<IContentSlideProps["slide"]>(
+    const [pageMode] = useState<PageMode>(PageMode.start);
+    const [presentation] = useState<IVotingPresentDetail>({} as IVotingPresentDetail);
+    const [currentSlide] = useState<IContentSlideProps["slide"]>(
         fakeSlideData as IContentSlideProps["slide"]
     );
-    const [isLoading, setIsLoading] = useState(false);
-    const [isSubmiting, setIsSubmiting] = useState(false);
-    const [activeSlideId, setActiveSlideId] = useState("");
+    const [isLoading] = useState(false);
+    const [isSubmiting] = useState(false);
+    const [activeSlideId] = useState("");
 
     useEffect(() => {
         if (!presentationIdentifier) {
@@ -115,7 +116,7 @@ export default function VotingPage() {
         };
 
         fetchCurrentSlide(activeSlideId);
-    }, [activeSlideId]);
+    }, [activeSlideId, presentationIdentifier]);
 
     const handleSubmitSlideChoice = async (choice: ISlideChoice) => {
         console.log(choice);
@@ -181,7 +182,7 @@ export default function VotingPage() {
                 <Stack>
                     <Link href="/" target={"_blank"} title="Trang chủ">
                         <div className={styles["voting-page__card__app-logo-container"]}>
-                            <img
+                            <Image
                                 className={styles["voting-page__card__app-logo-container__logo"]}
                                 src="/images/logo-presenti-transparent.png"
                                 alt="app-logo"

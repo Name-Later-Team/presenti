@@ -26,7 +26,7 @@ export default function Home() {
         resolver: zodResolver(schema),
     });
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting] = useState(false);
 
     const handleFindPresentationCode: SubmitHandler<IFormInputs> = (formValues) => {
         console.log(formValues);

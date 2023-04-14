@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styles from "../../styles/modules/Image.module.scss";
 
 export interface IImageProps {
@@ -7,12 +8,12 @@ export interface IImageProps {
     height?: string;
 }
 
-export default function Image(props: IImageProps) {
+export default function CustomImage(props: IImageProps) {
     const { url, width, height, alt } = props;
 
     return (
         <div className={`${styles["custom-image"]} ${styles["image-wrapper"]} mx-auto mb-3`} style={{ width, height }}>
-            <img src={url} alt={alt} />
+            <Image src={url} alt={alt || "img"} />
         </div>
     );
 }

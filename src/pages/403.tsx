@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Button, Stack } from "react-bootstrap";
 import styles from "../styles/modules/403.module.scss";
+import Image from "next/image";
 
 export default function PageNotFound() {
     const router = useRouter();
@@ -18,12 +19,12 @@ export default function PageNotFound() {
                         Về trang chủ
                     </Button>
                     <div>
-                        <img
+                        <Image
                             src="svgs/undraw_warning.svg"
                             style={{ width: "500px" }}
                             alt="page-not-found-illustration"
                             className="img-fluid"
-                        ></img>
+                        ></Image>
                     </div>
                 </Stack>
             </div>
