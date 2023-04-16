@@ -7,6 +7,10 @@ on:
       - develop
   workflow_dispatch:
 
+env: 
+  API_GATEWAY_URL: ${{ vars.TEMP_API_GATEWAY_URL }}
+  SOCKET_SERVICE_URL: ${{ vars.TEMP_SOCKET_SERVICE_URL }}
+
 jobs:
   build_and_test:
     name: Build and test source code
