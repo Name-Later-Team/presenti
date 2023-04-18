@@ -18,13 +18,13 @@ export default function PageNotFound() {
                     <Button className="mb-3" variant="primary" onClick={() => router.replace("/")}>
                         Về trang chủ
                     </Button>
-                    <div>
+                    <div style={{ width: "100%", height: "500px", maxHeight: "500px", position: "relative" }}>
                         <Image
                             src="svgs/undraw_warning.svg"
-                            style={{ width: "500px" }}
                             alt="page-not-found-illustration"
                             className="img-fluid"
-                        ></Image>
+                            fill
+                        />
                     </div>
                 </Stack>
             </div>

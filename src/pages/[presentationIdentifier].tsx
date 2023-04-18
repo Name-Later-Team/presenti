@@ -86,9 +86,7 @@ export default function VotingPage() {
     // states
     const [pageMode] = useState<PageMode>(PageMode.start);
     const [presentation] = useState<IVotingPresentDetail>({} as IVotingPresentDetail);
-    const [currentSlide] = useState<IContentSlideProps["slide"]>(
-        fakeSlideData as IContentSlideProps["slide"]
-    );
+    const [currentSlide] = useState<IContentSlideProps["slide"]>(fakeSlideData as IContentSlideProps["slide"]);
     const [isLoading] = useState(false);
     const [isSubmiting] = useState(false);
     const [activeSlideId] = useState("");
@@ -187,6 +185,7 @@ export default function VotingPage() {
                                 src="/images/logo-presenti-transparent.png"
                                 alt="app-logo"
                                 loading="lazy"
+                                fill
                             />
                         </div>
                     </Link>
