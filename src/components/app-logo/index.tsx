@@ -14,7 +14,7 @@ export default function AppLogo(props: IAppLogoProps) {
                 className={styles["app-logo-container__app-logo"]}
                 src="/images/logo-presenti-transparent.png"
                 alt="app-logo"
-                loading="lazy"
+                priority
                 fill
             />
         </div>

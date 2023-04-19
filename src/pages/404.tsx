@@ -24,6 +24,7 @@ export default function PageNotFound(props: any) {
                             src="svgs/undraw_page_not_found.svg"
                             alt="page-not-found-illustration"
                             className="img-fluid"
+                            style={{ objectFit: "contain" }}
                             fill
                         />
                     </div>

@@ -23,6 +23,7 @@ export default function PageNotFound() {
                             src="svgs/undraw_warning.svg"
                             alt="page-not-found-illustration"
                             className="img-fluid"
+                            style={{ objectFit: "contain" }}
                             fill
                         />
                     </div>

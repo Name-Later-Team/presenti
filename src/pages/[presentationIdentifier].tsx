@@ -184,7 +184,7 @@ export default function VotingPage() {
                                 className={styles["voting-page__card__app-logo-container__logo"]}
                                 src="/images/logo-presenti-transparent.png"
                                 alt="app-logo"
-                                loading="lazy"
+                                priority
                                 fill
                             />
                         </div>
