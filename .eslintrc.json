@@ -9,6 +9,7 @@
     "@typescript-eslint/no-explicit-any": "off",
     "react/no-unescaped-entities": "off",
     "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/ban-types": ["error",
     {
         "types": {
@@ -16,7 +17,8 @@
         },
         "extendDefaults": true
     }
-    ]
+    ],
+    "@typescript-eslint/no-empty-function": "off"
   },
   "parser": "@typescript-eslint/parser",
   "plugins": [
@@ -31,8 +33,6 @@
         "*.js"
       ],
       "rules": {
-        "@typescript-eslint/no-shadow": 1,
-        "no-shadow": 1,
         "no-undef": "off",
         "eqeqeq": "off",
         "@typescript-eslint/no-unused-vars": 2,
