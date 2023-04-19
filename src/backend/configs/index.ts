@@ -14,7 +14,7 @@ export const APP_CONFIG = {
         port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
     },
 
-    cookie: {
+    cookies: {
         name: process.env.COOKIE_NAME || "",
         secret: process.env.COOKIE_SECRET || "",
         path: process.env.COOKIE_PATH || "",
