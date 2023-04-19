@@ -1,17 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getOrSetUserAnonymousIdentifier } from "backend/common/libs";
 import AppLogo from "components/app-logo";
 import { Notification } from "components/notification";
 import FullscreenCenterContentLayout from "layouts/fullscreen-center-content";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { Button, Card, Form, Stack } from "react-bootstrap";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
 import InputMask from "react-input-mask";
-import styles from "../styles/modules/Home.module.scss";
 import AudienceService from "services/audience-service";
-import { useRouter } from "next/router";
-import { RESPONSE_CODE } from "../constants";
-import { ERROR_NOTIFICATION } from "../constants";
+import { z } from "zod";
+import { ERROR_NOTIFICATION, RESPONSE_CODE } from "../constants";
+import styles from "../styles/modules/Home.module.scss";
 
 const schema = z.object({
     votingCode: z
@@ -126,3 +127,12 @@ export default function Home() {
         </FullscreenCenterContentLayout>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    // init user id if not exist
+    getOrSetUserAnonymousIdentifier(context.req, context.res);
+
+    return {
+        props: {},
+    };
+};

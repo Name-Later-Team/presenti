@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     if (!promise) {
-        res.status(404).send({});
+        res.status(404).send({ code: 404, message: "Not Found" });
         return;
     }
 
