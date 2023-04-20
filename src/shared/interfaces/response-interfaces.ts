@@ -16,23 +16,42 @@ export interface IAccessTokenResponse {
     expiresIn: number;
 }
 
+export interface IOptionsResponse {
+    id: number;
+    label: string;
+    type: string;
+    position: number;
+    isCorrectAnswer: boolean;
+    metadata: any;
+}
+
 export interface ISlideDetailResponse {
     question: string;
     questionDescription: string;
-    active: boolean;
+    isActive: boolean;
     hideInstructionBar: boolean;
     textSize: number;
-    type: string;
-    adminKey: string;
-    config: any;
-    createdAt: string;
-    updatedAt: string;
+    slideType: string;
+    extrasConfig: string;
     questionImageUrl: string | null;
-    questionVideoUrl: string | null;
+    questionVideoEmbedUrl: string | null;
     speakerNotes: string;
-    id: string;
-    position: string;
-    presentationId: string;
-    presentationSeriesId: string;
-    choices: { id: string; label: string; position: number; correctAnswer: boolean }[];
+    id: number;
+    position: number;
+    presentationIdentifier: string;
+    choices: IOptionsResponse[];
+}
+
+export interface IPresentationDetailResponse {
+    closedForVoting: boolean;
+    identifier: string;
+    name: string;
+    ownerDisplayName: string;
+    pace: {
+        mode: string;
+        state: string;
+        active_slide_id: number;
+        counter: number;
+    };
+    totalSlides: number;
 }

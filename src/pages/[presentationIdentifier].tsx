@@ -13,6 +13,13 @@ import ThankYouSlide from "components/voting-slides/thank-you-slide";
 import { PresentationPaceStateType, SlideType } from "shared/types";
 import Link from "next/link";
 import Image from "next/image";
+import { GetServerSideProps } from "next";
+import { getOrSetUserAnonymousIdentifier } from "backend/common/libs";
+import { Notification } from "components/notification";
+import { ERROR_NOTIFICATION, INFO_NOTIFICATION, RESPONSE_CODE } from "../constants";
+import AudienceService from "services/audience-service";
+import { IMultipleChoiceExtraConfigs, IPresentationDetailResponse } from "shared/interfaces";
+import LoadingSlide from "components/voting-slides/loading-slide";
 
 export enum PageMode {
     start,
@@ -21,6 +28,7 @@ export enum PageMode {
     end,
     not_found,
     forbidden,
+    loading,
 }
 
 interface IVotingPresentPace {
@@ -30,51 +38,40 @@ interface IVotingPresentPace {
     counter: number;
 }
 
-interface IVotingPresentDetail {
-    name: string;
-    vote_key: string;
-    pace: IVotingPresentPace;
-    closed_for_voting: boolean;
-    slide_count: number;
-    slides: Array<{
-        id: number;
-        admin_key: string;
-        type: SlideType;
-    }>;
-}
-
-const fakeSlideData: IContentSlideProps["slide"] = {
-    adminKey: "string",
-    question: "Câu hỏi mẫu",
-    questionDescription: "Đây là thông tin câu hỏi mẫu",
-    questionImageUrl: undefined,
-    questionVideoUrl: undefined,
-    type: "multiple_choice",
-    active: true,
+const defaultSlideDetail: IContentSlideProps["slide"] = {
+    id: -1,
+    question: "",
+    questionDescription: "",
+    questionImageUrl: null,
+    questionVideoEmbedUrl: null,
+    extrasConfig: "",
+    isActive: false,
+    presentationIdentifier: "",
+    slideType: "",
+    speakerNotes: "",
     hideInstructionBar: true,
-    choices: [
-        {
-            id: 0,
-            label: "Lựa chọn 1",
-            position: 0,
-        },
-        {
-            id: 1,
-            label: "Lựa chọn 2",
-            position: 1,
-        },
-        {
-            id: 2,
-            label: "Lựa chọn 3",
-            position: 2,
-        },
-    ],
-    config: undefined,
-    position: 0,
+    choices: [],
+    position: -1,
     textSize: 32,
 };
 
-export default function VotingPage() {
+const defaultPresentationState: IPresentationDetailResponse = {
+    name: "",
+    closedForVoting: false,
+    identifier: "",
+    ownerDisplayName: "",
+    pace: {
+        active_slide_id: -1,
+        counter: 0,
+        mode: "",
+        state: "",
+    },
+    totalSlides: 0,
+};
+
+export default function VotingPage(props: { identifier: string }) {
+    const { identifier } = props;
+
     // libs
     const router = useRouter();
 
@@ -84,12 +81,15 @@ export default function VotingPage() {
         : router.query.presentationIdentifier;
 
     // states
-    const [pageMode] = useState<PageMode>(PageMode.start);
-    const [presentation] = useState<IVotingPresentDetail>({} as IVotingPresentDetail);
-    const [currentSlide] = useState<IContentSlideProps["slide"]>(fakeSlideData as IContentSlideProps["slide"]);
+    const [pageMode, setPageMode] = useState<PageMode>(PageMode.loading);
+    const [presentation, setPresentation] = useState<IPresentationDetailResponse>(
+        defaultPresentationState as IPresentationDetailResponse
+    );
+    const [currentSlide, setCurrentSlide] = useState<IContentSlideProps["slide"]>(
+        defaultSlideDetail as IContentSlideProps["slide"]
+    );
     const [isLoading] = useState(false);
     const [isSubmiting] = useState(false);
-    const [activeSlideId] = useState("");
 
     useEffect(() => {
         if (!presentationIdentifier) {
@@ -97,7 +97,35 @@ export default function VotingPage() {
         }
 
         const fetchPresentationDetail = async () => {
-            console.log("fetch presentation detail");
+            try {
+                const res = await AudienceService.getPresentationDetailAsync(presentationIdentifier);
+
+                if (res.code === 200) {
+                    if (!res.data) {
+                        Notification.notifyError(ERROR_NOTIFICATION.FETCH_PRESENTATION_DETAIL);
+                        return;
+                    }
+                    setPresentation(res.data);
+                    return;
+                }
+
+                throw new Error("Unhandled code");
+            } catch (error: any) {
+                const res = error?.response?.data;
+
+                if (res.code === RESPONSE_CODE.CANNOT_FIND_PRESENTATION) {
+                    Notification.notifyError(ERROR_NOTIFICATION.CANNOT_FIND_PRESENTATION);
+                    return;
+                }
+
+                if (res.code === RESPONSE_CODE.CANNOT_JOIN_NOT_PRESENTING_PRESENTATION) {
+                    setPageMode(PageMode.start);
+                    return;
+                }
+
+                console.error("VotingPage:", error);
+                Notification.notifyError(ERROR_NOTIFICATION.FETCH_PRESENTATION_DETAIL);
+            }
         };
 
         fetchPresentationDetail();
@@ -105,19 +133,112 @@ export default function VotingPage() {
 
     // fetch new slide information
     useEffect(() => {
-        if (!activeSlideId || !presentationIdentifier) {
+        if (!presentation.pace.active_slide_id || presentation.pace.active_slide_id === -1 || !presentationIdentifier) {
             return;
         }
 
         const fetchCurrentSlide = async (slideId: string) => {
-            console.log(slideId);
+            try {
+                const res = await AudienceService.getSlideDetailAsync(presentationIdentifier, slideId);
+
+                if (res.code === 200) {
+                    if (!res.data) {
+                        Notification.notifyError(ERROR_NOTIFICATION.FETCH_PRESENTATION_DETAIL);
+                        setPageMode(PageMode.not_found);
+                        return;
+                    }
+                    setCurrentSlide(res.data);
+                    setPageMode(PageMode.slide);
+                    return;
+                }
+
+                throw new Error("Unhandled code");
+            } catch (error: any) {
+                const res = error?.response?.data;
+
+                if (res.code === RESPONSE_CODE.CANNOT_FIND_PRESENTATION) {
+                    Notification.notifyError(ERROR_NOTIFICATION.CANNOT_FIND_PRESENTATION);
+                    setPageMode(PageMode.not_found);
+                    return;
+                }
+
+                if (res.code === RESPONSE_CODE.CANNOT_JOIN_NOT_PRESENTING_PRESENTATION) {
+                    setPageMode(PageMode.start);
+                    return;
+                }
+
+                console.error("VotingPage:", error);
+                Notification.notifyError(ERROR_NOTIFICATION.FETCH_PRESENTATION_DETAIL);
+                setPageMode(PageMode.not_found);
+            }
         };
 
-        fetchCurrentSlide(activeSlideId);
-    }, [activeSlideId, presentationIdentifier]);
+        fetchCurrentSlide(presentation.pace.active_slide_id.toString());
+    }, [presentation.pace.active_slide_id, presentationIdentifier]);
 
-    const handleSubmitSlideChoice = async (choice: ISlideChoice) => {
-        console.log(choice);
+    const handleSubmitSlideChoice = async (choices: ISlideChoice[]) => {
+        if (!presentationIdentifier) return;
+
+        // prepare payload
+        const choiceIds = choices.map((choice) => choice.id);
+
+        // submit
+        try {
+            await AudienceService.postVotingOptions(
+                presentationIdentifier,
+                presentation.pace.active_slide_id.toString(),
+                {
+                    userId: identifier,
+                    choiceIds: choiceIds,
+                }
+            );
+
+            setPageMode(PageMode.await);
+        } catch (error: any) {
+            const res = error?.response?.data;
+
+            if (res.code === RESPONSE_CODE.CANNOT_FIND_PRESENTATION) {
+                Notification.notifyError(ERROR_NOTIFICATION.CANNOT_FIND_PRESENTATION);
+                return;
+            }
+
+            if (res.code === RESPONSE_CODE.CANNOT_FIND_SLIDE) {
+                Notification.notifyError(ERROR_NOTIFICATION.CANNOT_FIND_SLIDE);
+                return;
+            }
+
+            if (res.code === RESPONSE_CODE.CLOSED_VOTING) {
+                Notification.notifyError(ERROR_NOTIFICATION.CLOSED_VOTING);
+                setPresentation((prev) => ({ ...prev, closedForVoting: true }));
+                return;
+            }
+
+            if (res.code === RESPONSE_CODE.MULTIPLE_ANSWER_DISABLED) {
+                Notification.notifyError(ERROR_NOTIFICATION.MULTIPLE_ANSWER_DISABLED);
+                setCurrentSlide((prev) => {
+                    const config = { enableMultipleAnswers: false } as IMultipleChoiceExtraConfigs;
+                    return {
+                        ...prev,
+                        extrasConfig: JSON.stringify(config),
+                    };
+                });
+                return;
+            }
+
+            if (res.code === RESPONSE_CODE.SLIDE_VOTING_DISABLED) {
+                Notification.notifyError(ERROR_NOTIFICATION.SLIDE_VOTING_DISABLED);
+                return;
+            }
+
+            if (res.code === RESPONSE_CODE.DISABLED_VOTE_SAME_SESSION) {
+                Notification.notifyInfo(INFO_NOTIFICATION.DISABLED_VOTE_SAME_SESSION);
+                setPageMode(PageMode.await);
+                return;
+            }
+
+            console.error("VotingPage:", error);
+            Notification.notifyError(ERROR_NOTIFICATION.VOTE_PROCESS);
+        }
     };
 
     /**
@@ -144,15 +265,19 @@ export default function VotingPage() {
                 return <AwaitSlide />;
             }
 
+            case PageMode.loading: {
+                return <LoadingSlide />;
+            }
+
             case PageMode.slide: {
                 return (
                     <>
                         <ContentSlide
-                            disabled={isSubmiting || presentation?.closed_for_voting}
+                            disabled={isSubmiting || presentation?.closedForVoting}
                             slide={currentSlide}
                             onSubmitChoice={handleSubmitSlideChoice}
                         />
-                        {presentation?.closed_for_voting && (
+                        {presentation?.closedForVoting && (
                             <Alert variant="danger" className="mt-3">
                                 <p className="fs-5 fw-bolder mb-1">Đã đóng bầu chọn</p>
                                 <p className="mb-0">
@@ -196,3 +321,14 @@ export default function VotingPage() {
         </FullscreenCenterContentLayout>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    // init user id if not exist
+    const identifier = getOrSetUserAnonymousIdentifier(context.req, context.res);
+
+    return {
+        props: {
+            identifier,
+        },
+    };
+};
