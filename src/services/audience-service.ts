@@ -18,14 +18,7 @@ export default class AudienceService {
         );
     }
 
-    static postVotingOptions(
-        presentationIdentifier: string,
-        slideId: string,
-        payload: { userId: string; choiceIds: number[] }
-    ) {
-        return HttpService.post<any>(
-            `/api/presentation/v1/audience/presentations/${presentationIdentifier}/slides/${slideId}/vote`,
-            payload
-        );
+    static postVotingOptions(presentationIdentifier: string, slideId: string, payload: { choiceIds: number[] }) {
+        return HttpService.post<any>(`/api/vote/${presentationIdentifier}/slides/${slideId}`, payload);
     }
 }

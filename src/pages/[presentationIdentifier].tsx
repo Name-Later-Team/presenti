@@ -291,7 +291,6 @@ export default function VotingPage(props: { identifier: string }) {
                 presentationIdentifier,
                 presentation.pace.active_slide_id.toString(),
                 {
-                    userId: identifier,
                     choiceIds: choiceIds,
                 }
             );
