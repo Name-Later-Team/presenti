@@ -3,10 +3,24 @@
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended"
   ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "react/no-unescaped-entities": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/ban-types": ["error",
+    {
+        "types": {
+            "Function": false
+        },
+        "extendDefaults": true
+    }
+    ],
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-empty-interface": "off"
+  },
   "parser": "@typescript-eslint/parser",
   "plugins": [
     "@typescript-eslint"
@@ -20,8 +34,6 @@
         "*.js"
       ],
       "rules": {
-        "@typescript-eslint/no-shadow": 1,
-        "no-shadow": 1,
         "no-undef": "off",
         "eqeqeq": "off",
         "@typescript-eslint/no-unused-vars": 2,
