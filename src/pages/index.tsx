@@ -50,7 +50,10 @@ export default function Home() {
                     return;
                 }
                 router.push(`/${resData?.identifier}`);
+                return;
             }
+
+            throw new Error("Unhandled code");
         } catch (error: any) {
             const res = error?.response?.data;
 

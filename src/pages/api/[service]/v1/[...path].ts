@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
     if (!req.url) {
-        res.status(404).send({});
+        res.status(404).send({ code: 404, message: "Not Found" });
         return;
     }
 
