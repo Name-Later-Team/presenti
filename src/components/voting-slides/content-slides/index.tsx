@@ -1,6 +1,5 @@
 import { IBaseComponent, IMultipleChoiceExtraConfigs, ISlideDetailResponse, TExtraConfigs } from "shared/interfaces";
 import { SlideWrapper } from "../slide-wrapper";
-import { SlideType } from "shared/types";
 import MultipleChoiceForm from "components/voting-slides/slide-forms/multiple-choice-form";
 import { Stack } from "react-bootstrap";
 
@@ -14,10 +13,12 @@ export interface IContentSlideProps extends IBaseComponent {
     slide: ISlideDetailResponse;
     onSubmitChoice?: (choices: ISlideChoice[]) => void;
     disabled: boolean;
+    alreadyVoted: boolean;
+    skipSlide?: () => void;
 }
 
 export default function ContentSlide(props: IContentSlideProps) {
-    const { slide, onSubmitChoice, disabled } = props;
+    const { slide, onSubmitChoice, disabled, alreadyVoted, skipSlide } = props;
 
     const handleSubmitForm = (value: number[]) => {
         if (!Array.isArray(value)) return;
@@ -61,6 +62,8 @@ export default function ContentSlide(props: IContentSlideProps) {
                             }
                             onSubmit={handleSubmitForm}
                             disabled={disabled}
+                            alreadyVoted={alreadyVoted}
+                            skipSlide={skipSlide}
                         />
                     </>
                 );

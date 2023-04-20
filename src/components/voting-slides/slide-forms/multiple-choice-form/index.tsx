@@ -12,10 +12,12 @@ export interface IMultipleChoiceFormProps extends IBaseComponent {
     allowMultipleAnswers: boolean;
     disabled?: boolean;
     onSubmit?: (value: number[]) => void;
+    alreadyVoted: boolean;
+    skipSlide?: () => void;
 }
 
 export default function MultipleChoiceForm(props: IMultipleChoiceFormProps) {
-    const { choices, disabled, allowEmpty, allowMultipleAnswers, onSubmit } = props;
+    const { choices, disabled, allowEmpty, allowMultipleAnswers, onSubmit, alreadyVoted, skipSlide } = props;
 
     const [checked, setChecked] = useState<string[]>([]);
     const [hasError, setHasError] = useState(false);
@@ -73,21 +75,41 @@ export default function MultipleChoiceForm(props: IMultipleChoiceFormProps) {
                 })}
                 {hasError && <FormText className="text-danger mb-3">Không được bỏ trống lựa chọn</FormText>}
             </Form.Group>
-            <Button disabled={disabled} variant="primary" type="submit" className="w-100 mb-2" size="lg">
-                Gửi
-            </Button>
-            {checked.length !== 0 && allowEmpty && (
-                <Button
-                    variant="text-secondary"
-                    type="button"
-                    className="w-100"
-                    size="lg"
-                    onClick={() => {
-                        setChecked([]);
-                    }}
-                >
-                    Xóa lựa chọn
-                </Button>
+            {alreadyVoted ? (
+                <>
+                    <div className="d-flex justify-content-center align-items-center">
+                        <FormText className="text-muted mt-0 mb-3">Bạn đã bầu chọn cho câu hỏi này rồi</FormText>
+                    </div>
+                    <Button
+                        disabled={disabled}
+                        variant="secondary"
+                        type="submit"
+                        className="w-100 mb-2"
+                        size="lg"
+                        onClick={() => skipSlide && skipSlide()}
+                    >
+                        Bỏ qua
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <Button disabled={disabled} variant="primary" type="submit" className="w-100 mb-2" size="lg">
+                        Gửi
+                    </Button>
+                    {checked.length !== 0 && allowEmpty && (
+                        <Button
+                            variant="text-secondary"
+                            type="button"
+                            className="w-100"
+                            size="lg"
+                            onClick={() => {
+                                setChecked([]);
+                            }}
+                        >
+                            Xóa lựa chọn
+                        </Button>
+                    )}
+                </>
             )}
         </Form>
     );

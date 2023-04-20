@@ -32,11 +32,6 @@ export const RESPONSE_CODE = {
 // define all success notifications
 export const SUCCESS_NOTIFICATION = {};
 
-// define all info notifications
-export const INFO_NOTIFICATION = {
-    DISABLED_VOTE_SAME_SESSION: "Bạn đã bầu chọn cho câu hỏi này rồi",
-};
-
 // define all error notifications
 export const ERROR_NOTIFICATION = {
     VALIDATION_ERROR: "Có lỗi trong yêu cầu đã gửi",

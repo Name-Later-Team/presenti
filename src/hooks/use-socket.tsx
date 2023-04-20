@@ -62,10 +62,7 @@ const defaultStates = {
     socketStatus: SOCKET_STATUS.notInitialized,
 };
 
-export default function useSocket(props: { userId: string }): IUseSocket {
-    // props
-    const { userId } = props;
-
+export default function useSocket(userId: string): IUseSocket {
     // states
     const [socket, setSocket] = useState<Socket | null>(defaultStates.socket);
     const [ticket, setTicket] = useState<string | null>(defaultStates.ticket);
@@ -160,8 +157,8 @@ export default function useSocket(props: { userId: string }): IUseSocket {
 
     // handling functions
     const createSocket = useCallback(
-        (namespace: string = SOCKET_NAMESPACE.default) => {
-            setNamespace(namespace);
+        (nsp: string = SOCKET_NAMESPACE.default) => {
+            setNamespace(nsp);
             initConnectSocket();
         },
         [initConnectSocket]
