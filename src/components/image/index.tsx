@@ -13,7 +13,7 @@ export default function CustomImage(props: IImageProps) {
 
     return (
         <div className={`${styles["custom-image"]} ${styles["image-wrapper"]} mx-auto mb-3`} style={{ width, height }}>
-            <Image src={url} alt={alt || "img"} />
+            <Image src={url} alt={alt || "img"} fill priority />
         </div>
     );
 }

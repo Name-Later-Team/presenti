@@ -1,6 +1,5 @@
-import { IBaseComponent } from "shared/interfaces";
+import { IBaseComponent, IMultipleChoiceExtraConfigs, ISlideDetailResponse, TExtraConfigs } from "shared/interfaces";
 import { SlideWrapper } from "../slide-wrapper";
-import { SlideType } from "shared/types";
 import MultipleChoiceForm from "components/voting-slides/slide-forms/multiple-choice-form";
 import { Stack } from "react-bootstrap";
 
@@ -11,34 +10,28 @@ export interface ISlideChoice {
 }
 
 export interface IContentSlideProps extends IBaseComponent {
-    slide: {
-        adminKey: string;
-        question: string;
-        questionDescription: string;
-        questionImageUrl?: string;
-        questionVideoUrl?: string;
-        type: SlideType;
-        active: boolean;
-        hideInstructionBar: boolean;
-        choices: ISlideChoice[];
-        config?: Record<string, any>;
-        position: number;
-        textSize: number;
-    };
-    onSubmitChoice?: (choice: ISlideChoice) => void;
+    slide: ISlideDetailResponse;
+    onSubmitChoice?: (choices: ISlideChoice[]) => void;
     disabled: boolean;
+    alreadyVoted: boolean;
+    skipSlide?: () => void;
 }
 
 export default function ContentSlide(props: IContentSlideProps) {
-    const { slide, onSubmitChoice, disabled } = props;
+    const { slide, onSubmitChoice, disabled, alreadyVoted, skipSlide } = props;
 
-    const handleSubmitForm = (value: number) => {
-        const choice = slide.choices.find((c) => c.id === value);
-        if (!choice || !onSubmitChoice) {
+    const handleSubmitForm = (value: number[]) => {
+        if (!Array.isArray(value)) return;
+        const choicesToSubmit: ISlideChoice[] = [];
+        value.forEach((item) => {
+            const choice = slide.choices.find((c) => c.id === item);
+            if (choice) choicesToSubmit.push(choice);
+        });
+        if (choicesToSubmit.length === 0 || !onSubmitChoice) {
             return;
         }
 
-        onSubmitChoice(choice);
+        onSubmitChoice(choicesToSubmit);
     };
 
     const formChoice = slide.choices
@@ -50,16 +43,27 @@ export default function ContentSlide(props: IContentSlideProps) {
      * @returns React.ReactNode
      */
     const renderForm = (): React.ReactNode => {
-        switch (slide.type) {
+        switch (slide.slideType) {
             case "multiple_choice": {
+                let slideConfig: TExtraConfigs = {};
+                try {
+                    slideConfig = JSON.parse(slide.extrasConfig);
+                } catch (err) {
+                    console.error("ContentSlide:", err);
+                }
                 return (
                     <>
                         <hr className="mt-0 mb-3" />
                         <MultipleChoiceForm
                             choices={formChoice}
                             allowEmpty={true}
+                            allowMultipleAnswers={
+                                (slideConfig as IMultipleChoiceExtraConfigs)?.enableMultipleAnswers ?? false
+                            }
                             onSubmit={handleSubmitForm}
                             disabled={disabled}
+                            alreadyVoted={alreadyVoted}
+                            skipSlide={skipSlide}
                         />
                     </>
                 );
@@ -72,7 +76,7 @@ export default function ContentSlide(props: IContentSlideProps) {
     };
 
     return (
-        <SlideWrapper imageUrl={slide.questionImageUrl}>
+        <SlideWrapper imageUrl={slide.questionImageUrl ?? ""}>
             <Stack gap={2}>
                 <h1 style={{ fontSize: `${slide}px` }}>{slide.question}</h1>
 

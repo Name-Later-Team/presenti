@@ -1,0 +1,5 @@
+export const APP_CONSTANTS = {
+    PRESENTER_APP_URL: process.env.NEXT_PUBLIC_PRESENTER_APP_URL || "",
+
+    SOCKET_DOMAIN: process.env.NEXT_PUBLIC_SOCKET_SERVICE_URL || "",
+};

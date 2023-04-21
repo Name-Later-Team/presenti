@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SlideWrapper } from "../slide-wrapper";
+import { APP_CONSTANTS } from "../../../constants";
 
 export default function NotFoundSlide() {
     return (
@@ -10,7 +11,7 @@ export default function NotFoundSlide() {
                 Bạn có thể bắt đầu tạo cho mình một bài trình bày chỉ với vài thao tác đơn giản!
             </p>
 
-            <Link href="#" className="btn btn-primary">
+            <Link href={APP_CONSTANTS.PRESENTER_APP_URL} target="_blank" className="btn btn-primary">
                 Tôi muốn tạo bài trình bày
             </Link>
         </SlideWrapper>

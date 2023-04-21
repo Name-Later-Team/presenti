@@ -3,13 +3,6 @@
     width: 100%;
 
     img {
-        position: absolute;
-        width: inherit;
-        height: inherit;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        max-width: 100%;
         object-fit: contain;
     }
 }

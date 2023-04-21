@@ -19,24 +19,17 @@ export default function PageNotFound(props: any) {
                         Về trang chủ
                     </Button>
                     {props.env}
-                    <div>
+                    <div style={{ width: "100%", height: "500px", maxHeight: "500px", position: "relative" }}>
                         <Image
                             src="svgs/undraw_page_not_found.svg"
-                            style={{ width: "500px" }}
                             alt="page-not-found-illustration"
                             className="img-fluid"
-                        ></Image>
+                            style={{ objectFit: "contain" }}
+                            fill
+                        />
                     </div>
                 </Stack>
             </div>
         </>
     );
-}
-
-export function getStaticProps() {
-    return {
-        props: {
-            env: process.env.API_GATEWAY_URL,
-        },
-    };
 }

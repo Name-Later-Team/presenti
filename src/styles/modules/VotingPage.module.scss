@@ -18,6 +18,7 @@
 
     height: var(--app-logo-edge);
     max-height: var(--app-logo-edge);
+    width: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,5 +26,6 @@
     > .voting-page__card__app-logo-container__logo {
         height: 100%;
         -webkit-user-drag: none;
+        object-fit: contain;
     }
 }
