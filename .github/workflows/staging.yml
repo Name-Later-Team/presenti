@@ -4,9 +4,8 @@ run-name: ${{ github.actor }} is building the source code
 on:
   pull_request:
     branches:
-      - develop
+      - staging
   workflow_dispatch:
-
 
 jobs:
   build_source:
