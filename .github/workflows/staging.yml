@@ -1,5 +1,5 @@
-name: Build and test source code (CI)
-run-name: ${{ github.actor }} is building and testing the source code
+name: Build source code on the staging branch
+run-name: ${{ github.actor }} is building the source code
 
 on:
   pull_request:
@@ -7,14 +7,14 @@ on:
       - develop
   workflow_dispatch:
 
-env:
-  API_GATEWAY_URL: ${{ vars.TEMP_API_GATEWAY_URL }}
-  SOCKET_SERVICE_URL: ${{ vars.TEMP_SOCKET_SERVICE_URL }}
 
 jobs:
-  build_and_test:
-    name: Build and test source code
+  build_source:
+    name: Build source code
     runs-on: ubuntu-22.04
+    env:
+      NEXT_PUBLIC_PRESENTER_APP_URL: temp_value
+      NEXT_PUBLIC_SOCKET_SERVICE_URL: temp_value
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -35,4 +35,4 @@ jobs:
         run: npm run build --if-present
 
       # - name: Test source code
-      #   run: npm run test --if-present
+      #   run: npm test --if-present
