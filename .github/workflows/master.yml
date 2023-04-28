@@ -2,9 +2,9 @@ name: Presenti NextJS Deployment
 run-name: ${{ github.actor }} is building and deploying automatically
 
 on:
-  # pull_request:
-  #   branches:
-  #     - master
+  pull_request:
+    branches:
+      - master
   workflow_dispatch:
 
 env:
