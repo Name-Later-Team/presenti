@@ -51,6 +51,9 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
+      - name: Setup our npm registry
+        run: echo "${{ secrets.NPMRC_FILE_CONTENT }}" > .npmrc
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=${{ vars.VERCEL_ENV }} --token=${{ secrets.VERCEL_TOKEN }}
 
